@@ -1,0 +1,10 @@
+# Ignorar dependencias de cada carpeta
+gateway/node_modules/
+ms_user/node_modules/
+ms_product/node_modules/
+serviq/node_modules/
+serviq/node_modules/
+
+# Ignorar las bases de datos de las colas (Muy importante)
+queues/
+*.db
