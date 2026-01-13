@@ -1,9 +1,11 @@
+import RouteWrap from "./RouteWrap/RouteWrap";
+
 const App = () => {
 
     return (
-        <div className="app">
-            App
-        </div>
+        <>
+            <RouteWrap />
+        </>
     );
 };
 

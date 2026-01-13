@@ -1,0 +1,19 @@
+.btnA {
+    background-color: var(--cola);
+    transition: .3s ease-in-out;
+    color: black;
+}
+
+.btnA:hover {
+    opacity: 0.9;
+}
+
+.btnB {
+    background-color: var(--colb);
+    transition: .3s ease-in-out;
+    color: var(--colc);
+}
+
+.btnB:hover {
+    opacity: 0.9;
+}

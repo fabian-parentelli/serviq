@@ -1,0 +1,85 @@
+.navBar {
+    width: 100%;
+    height: 70px;
+    position: fixed;
+    top: 0;
+    transition: top .3s;
+    z-index: 1001;
+    background-color: var(--colbg);
+}
+
+.navBar .navBarSect {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+}
+
+.navBar .navBarSect .navBarSectTitle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: var(--colc);
+    cursor: pointer;
+}
+
+.navBar .navBarSect .navBarDiv {
+    gap: 1rem;
+}
+
+.navBar .navBarSect .navBarDiv a {
+    color: var(--colc);
+    text-decoration: none;
+}
+
+.navBar .navBarSect .navBarDiv a:hover {
+    color: var(--cola);
+}
+
+.navBar .navBarSect .navBarHamb {
+    display: none;
+}
+
+.navBar .navBarSect .navBarHambCont {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    
+    .navBar .navBarSect .navBarDiv {
+        display: none;
+    }
+
+    .navBar .navBarSect .navBarHamb {
+        display: flex;
+        position: relative;
+    }
+
+    .navBar .navBarSect .navBarHambCont {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        width: 200px;
+        background-color: var(--colbo);
+        transition: .3s ease-in-out;
+    }
+    
+    .navBar .navBarSect .navBarHambCont li {
+        list-style: none;
+        padding: 1rem;
+    }
+
+    .navBar .navBarSect .nvhcOpen {
+        top: 70px;
+        right: 0;
+    }
+
+    .navBar .navBarSect .nvhcClosed {
+        top: 70px;
+        right: -200px;
+    }
+
+}

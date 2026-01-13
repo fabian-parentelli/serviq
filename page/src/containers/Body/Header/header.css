@@ -1,0 +1,60 @@
+.header {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.header .headerSect {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.header .headerSect img {
+    max-width: 110px;
+    width: 90%;
+}
+
+.header .headerSect h2 {
+    font-size: 7rem;
+}
+
+.header .headerSubTitle {
+    font-size: 1.6rem;
+    max-width: 60%;
+    text-align: center;
+    line-height: 1.4;
+}
+
+.header .headerButtons {
+    margin-top: 3rem;
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+@media (max-width: 767px) {
+
+    .header .headerSect img {
+        max-width: 50px;
+        width: 90%;
+    }
+
+    .header .headerSect h2 {
+        font-size: 3rem;
+    }
+
+    .header .headerSubTitle {
+        max-width: 80%;
+        font-size: 1rem;
+        margin-top: 1rem;
+        line-height: 1.6;
+    }
+
+    .header .headerButtons {
+        gap: 1.4rem;
+    }
+}

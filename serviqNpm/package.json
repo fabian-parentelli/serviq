@@ -1,6 +1,6 @@
 {
-  "name": "serviq",
-  "version": "1.0.0",
+  "name": "fara-serviq",
+  "version": "0.0.1",
   "description": "Librería de microservicios con Broker balanceado y colas persistentes",
   "main": "src/index.js",
   "types": "index.d.ts",
