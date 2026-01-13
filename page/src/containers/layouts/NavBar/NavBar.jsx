@@ -43,7 +43,7 @@ const NavBar = () => {
                 </div>
 
                 <div className='flex-center navBarDiv'>
-                    <Link to={'/what'} >Que es</Link>
+                    <a href="#what">Que es</a>
                     <Link to={'/doc'} >Documentación</Link>
                     <Link to={'/blog'} >Blog</Link>
                     <Link to={'/com'} >Comunidad</Link>

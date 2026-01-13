@@ -10,10 +10,11 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    position: relative;
 }
 
 .header .headerSect img {
-    max-width: 110px;
+    max-width: 100px;
     width: 90%;
 }
 
