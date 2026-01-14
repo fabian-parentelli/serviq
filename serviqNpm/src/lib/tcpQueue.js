@@ -15,12 +15,13 @@ class TcpQueue {
     async start() {
         this.client.connect();
         this.client.onMessage = async (msg) => {
-            try {                
+            try {
                 const response = await this.client.send(msg.data._originalTo, msg.pattern, msg.data, msg.cid);
+
                 if (response && response.status === 'error') {
                     throw new Error(`Logical error in ${msg.data._originalTo}`);
                 };
-                await this.client.send(msg.data._originalFrom, 'res', response, msg.cid);
+                if (msg.res !== false) await this.client.send(msg.data._originalFrom, 'res', response, msg.cid);
             } catch (error) {
                 const nextRun = Date.now() + 5000;
                 this.storage.savePending({ ...msg, attempts: 1 }, nextRun);
@@ -48,14 +49,17 @@ class TcpQueue {
                 if (!this.client.socket || !this.client.socket.writable) {
                     throw new Error("Target service disconnected");
                 };
+
                 const response = await this.client.send(target, work.pattern, work.data, work.cid);
+
                 if (response && response.status === 'error') {
                     throw new Error("Logical error during retry");
                 };
+
                 this.storage.deleteById('pending', work.cid);
 
-                if (typeof this.onSuccess === 'function') {
-                    this.onSuccess({ target, pattern: work.pattern, data: response, cid: work.cid, });
+                if (work.res !== false && typeof this.onSuccess === 'function') {
+                    this.onSuccess({ target, pattern: work.pattern, data: response, cid: work.cid });
                 };
 
             } catch (error) {

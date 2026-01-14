@@ -62,7 +62,7 @@ class Client {
 
         res = pattern.startsWith('res') ? false : res;
         const messageCid = cid || randomUUID();
-        const payload = { to, from: this.name, pattern, data, cid: messageCid };
+        const payload = { to, from: this.name, pattern, data, cid: messageCid, res };
 
         if (!res) {
             this.socket.write(JSON.stringify(payload) + '\n');
