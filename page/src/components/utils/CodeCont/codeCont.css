@@ -1,0 +1,50 @@
+.codeCont {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.codeCont .codeContTop {
+    display: flex;
+    justify-content: space-between;
+    background-color: #0f0f0f;
+    padding: 1rem;
+    border-radius: 12px 12px 0 0;
+}
+
+.codeCont .codeContTop p {
+    color: var(--colbo);
+}
+
+.codeCont .codeContBottom {
+    width: 100%;
+    min-height: 55px;
+    background-color: #0f0f0f;
+    border-radius: 0 0 10px 10px;
+    padding: 1rem;
+}
+
+.codeCont .codeContBottom pre code .cod-green {
+    color: #4D7A38;
+}
+
+.codeCont .codeContBottom pre code .cod-pink {
+    color: #f568b5;
+}
+
+.codeCont .codeContBottom pre code .cod-skyblue {
+    color: #7ee2ef;
+}
+
+.codeCont .codeContBottom pre code .cod-skyyellow {
+    color: #ffffa6;
+}
+
+.codeCont .codeContBottom pre code .cod-blue {
+    color: #118dd6;
+}
+
+.codeCont .codeContBottom pre code .cod-red {
+    color: #ea9247;
+}

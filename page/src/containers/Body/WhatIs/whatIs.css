@@ -11,12 +11,11 @@
     font-size: 3rem;
 }
 
-/* Text */
-
-#whatIs .whatIsp {
-    max-width: 60%;
+#whatIs .whatIsPar {
+    max-width: 1000px;
+    width: 90%;
     line-height: 2;
-    color: var(--cold);
+    margin: 2rem 0;
 }
 
 /* Table */

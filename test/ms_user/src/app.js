@@ -1,27 +1,37 @@
-import serviq from 'serviq';
-import * as userService from './service.js';
+import serviq from '../../../serviqNpm/src/index.js';
 
-export const client = serviq.tcpClient(4000, 'ms_user');
+export const client = serviq.tcpClient('users');
 client.connect();
 
-client.onMessage = async (msg) => {
-    
-    const { pattern, data, from, cid } = msg;
+let isError = true;
 
-    if (!cid) return await userService[pattern](data);
+setTimeout(() => {
+    isError = false;
+    console.log("\x1b[32m[Servicio] El error se ha solucionado, listo para procesar.\x1b[0m");
+}, 35000);
+
+client.onMessage = async (msg) => {
 
     try {
-        const result = await userService[pattern](data);
         
-        if (!result || result.status === 'error') {
-            return client.send(from, 'res', result || { status: 'error' }, cid);
-            // Para que vuelva a la cola es importante que su status sea error.
+        // await client.send('products', 'onProduct', { type: 'technology' });
+        
+        if (isError) {
+            throw new Error('Error temporal activo');
+        };
+        
+        // Lógica de negocio
+        const user = { name: 'jaun', age: 27 };
+
+        if (client.isRequest(msg.pattern)) {
+            await client.send(msg.from, 'res', user, msg.cid);
         };
 
-        client.send(from, 'res', result, cid);
     } catch (error) {
-        console.log(error);
-        client.send(from, 'res', { status: 'error', message: error.message }, cid);
+        // Informamos al broker.
+        console.log('entro al error');
+        
+        await client.send('BROKER', 'error', { originalMsg: msg, error: error.message }, msg.cid);
     };
 
 };

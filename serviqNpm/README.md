@@ -1,185 +1,275 @@
-# 🚀 Serviq: Microservices Reliability Framework
+Serviq: Ultra-Lightweight Message Broker
 
-**Serviq** es una librería profesional para Node.js diseñada para construir arquitecturas de microservicios robustas, escalables y, sobre todo, **resilientes**.
+**Serviq** es un Broker de mensajería TCP diseñado para arquitecturas de microservicios que requieren **alta velocidad, persistencia garantizada y reintentos inteligentes**, todo sin la complejidad de configurar grandes infraestructuras como RabbitMQ o Kafka.
 
-A diferencia de otras librerías, Serviq incluye un **Broker inteligente** con balanceo de carga y un sistema de **Colas con Persistencia SQLite** integrado, lo que garantiza que ningún mensaje se pierda, incluso si un servicio se cae.
+Está construido nativamente sobre Node.js, aprovechando el rendimiento de los sockets TCP y la velocidad de **SQLite (DatabaseSync)** para la persistencia en disco.
 
----
+## ¿Para qué sirve?
 
-## 📂 Estructura Recomendada del Proyecto
+Serviq actúa como el "sistema nervioso" de tu aplicación. Permite que diferentes servicios se comuniquen entre sí de forma asíncrona:
+- **Garantía de Entrega:** Si un servicio está caído, Serviq guarda el mensaje y lo intenta entregar más tarde.
+- **Desacoplamiento:** El servicio "A" no necesita saber si el servicio "B" está encendido; solo envía el mensaje al Broker.
+- **Persistencia Híbrida:** Utiliza un Pool de colas en memoria para velocidad y persistencia en disco para seguridad ante fallos del sistema.
 
-Para mantener el orden en el desarrollo, recomendamos la siguiente estructura de carpetas:
+## Conceptos Core
 
-```text
-mi-proyecto/
-├── gateway/           # API Gateway (Express, Fastify, etc.)
-├── ms_user/           # Microservicio de Usuarios
-├── ms_product/        # Microservicio de Productos
-├── serviq/            # Configuración de infraestructura
-│   ├── broker.js      # Orquestador central
-│   └── queue.js       # Configuración de las colas
-└── start.sh           # Script de arranque automático
+### 1. El Broker
 
-```
+El corazón del sistema. Gestiona las conexiones de los clientes, el enrutamiento de mensajes y el motor de reintentos.
 
----
+- **Puerto por defecto:** `4220`.
+- **Seguridad:** Validación de JSON y protección contra datos corruptos (Socket Security).
+- **Protocolo:** Comunicación binaria/texto vía TCP para mínima latencia.
 
-## 🛠️ Configuración e Inicio rápido
+### 2. Pool de Colas (Sharding Local)
 
-### 1. El Broker (Orquestador)
+A diferencia de otros brokers, Serviq divide la carga en múltiples colas (`queue_n`). Esto permite
+- **Paralelismo:** Menor contención de datos al leer/escribir.
+- **Archivos de DB independientes:** Cada cola tiene su propio archivo `.db` en la carpeta `/queues`.
 
-El Broker es el corazón de la red. Debes inicializarlo pasando un array con los nombres de las colas que vas a utilizar (mínimo una).
+### 3. Motor de Reintentos (Backoff Exponencial)
 
-```javascript
-// serviq/broker.js
+Si un mensaje falla, Serviq no se rinde de inmediato. Lo reintenta en intervalos crecientes:
+
+1. **Inmediato** Primer intento).
+2. **10 minutos** después.
+3. **15 minutos** después.
+4. **20 minutos** después.
+5. **25 minutos** después.
+### 4. Dead Letter Queue (Cuarentena)
+
+Si tras 5 intentos el mensaje no puede ser entregado (por ejemplo, el servicio de destino tiene un bug persistente), el mensaje se mueve a la **Dead Letter Table**.
+
+- **Auditoría:** Los mensajes no se borran; quedan disponibles para que el administrador los inspeccione.
+    
+- **Recuperación:** Permite limpiar o re-inyectar mensajes manualmente.
+
+## Instalación y Quick Start
+
+JavaScript
+
+```js
 import serviq from 'serviq';
 
-const broker = serviq.tcpBroker(4000, ['queue_a', 'queue_b']);
+// Crear el broker en el puerto 4220 con 3 colas de persistencia
+const broker = serviq.tcpBroker(4220, 3);
+
+// Iniciar el servidor
 broker.init();
-
 ```
 
-### 2. El Script de Arranque (`start.sh`)
+## Protocolo de Mensajería
 
-Recomendamos este script para levantar toda la infraestructura de un solo comando durante el desarrollo.
+Para que un microservicio hable con Serviq, debe enviar objetos JSON a través de un socket TCP. **Importante:** Cada mensaje debe terminar con un salto de línea (`\n`) para que el Broker sepa dónde termina un comando y empieza el siguiente.
 
-```bash
-#!/bin/bash
-# Matar procesos hijos al salir
-trap "kill 0" EXIT
+### 1. Registro del Servicio
 
-# 1. Iniciar Broker primero
-node serviq/broker.js &
-sleep 1
+Lo primero que debe hacer cualquier cliente al conectarse es identificarse.
 
-# 2. Iniciar Gateway, Colas y Microservicios
-node gateway/src/app.js &
-node serviq/queue.js &
-node ms_user/src/app.js &
-node ms_product/src/app.js &
+JSON
 
-wait
-
+```json
+{
+  "type": "REGISTER",
+  "name": "orders-service"
+}
 ```
 
-*Ejecutar con: `chmod +x start.sh && ./start.sh*`
+### 2. Estructura de un Mensaje (Task)
 
----
+Para enviar una tarea a otro servicio, el formato es el siguiente:
 
-## 🔌 Implementación de Componentes
+JSON
 
-### API Gateway (Cliente)
+```json
+{
+  "to": "notifications-service",
+  "from": "orders-service",
+  "pattern": "send_email",
+  "cid": "unique-uuid-12345",
+  "data": {
+    "email": "user@example.com",
+    "body": "Tu pedido ha sido enviado"
+  }
+}
+```
 
-El Gateway utiliza un cliente para comunicarse. Al enviar mensajes, si esperas una respuesta inmediata (Lectura), usa `await`.
+- **`to`**: El nombre del servicio destino.
+- **`pattern`**: La acción a realizar. Si empieza con `get`, Serviq **no** lo guardará en disco si falla (asume que es una consulta síncrona).
+- **`cid`**: (Correlation ID) Un ID único para rastrear el mensaje.
 
-```javascript
+
+## Guía de Administración (Mantenimiento)
+
+Serviq provee métodos específicos para que el desarrollador pueda monitorear y limpiar el sistema.
+
+### Monitoreo del Estado
+
+El método `getQueuesStatus()` devuelve una radiografía del Broker:
+
+JavaScript
+
+```js
+const status = broker.getQueuesStatus();
+/* Retorna:
+{
+  totalQueues: 3,
+  activeClients: ['orders-service', 'inventory-service'],
+  queues: [
+    { id: 'queue_0', inMemory: 5, inDisk: 100, deadLetter: 2 },
+    ...
+  ]
+}
+*/
+```
+
+### Gestión de Errores (Dead Letter)
+
+Cuando un mensaje agota sus 5 reintentos, cae en la tabla de fallos. Así se gestiona:
+1. **Ver fallos:** `broker.getFailedMessages()` retorna un array con todos los mensajes en cuarentena.
+2. **Eliminar uno:** `broker.deleteFailedMessage(cid)` borra un mensaje específico si ya no es útil.
+3. **Limpieza Total:** `broker.purgeAllQueues()` vacía absolutamente todo (mensajes activos y errores) y resetea el Broker a cero.
+
+
+## Seguridad y Resiliencia
+
+Serviq está blindado contra fallos comunes:
+
+- **Validación de JSON:** Si un cliente envía datos malformados, Serviq corta la conexión (`socket.destroy()`) para evitar saturación de memoria.
+- **Heartbeat (Keep-Alive):** Detecta conexiones "zombie" y las limpia cada 60 segundos
+- **Atomicidad:** Al usar SQLite, si el servidor se apaga repentinamente, los mensajes que estaban en disco permanecen intactos para el próximo inicio.
+
+## Flujo de Respuesta y Resiliencia
+
+Serviq no solo envía mensajes, sino que gestiona el ciclo de vida de la respuesta. Si un servicio falla, el mensaje vuelve al Broker para ser reintentado.
+
+### 1. El Gateway (Cliente Solicitante)
+
+El Gateway usa `client.send` para pedir datos. Si el servicio de destino está caído o falla, Serviq le devolverá un estado `pending`.
+
+JavaScript
+
+```js
+import faress from "../faress.js";
 import { client } from "./config.js";
 
+const app = faress();
 client.connect();
 
 app.get('/', async (req, res) => {
-    // client.send(servicio_destino, funcion, data)
-    const result = await client.send('ms_product', 'postProduct', { _id: 1234 });
+    // Enviamos petición al servicio 'users'
+    // Pattern: 'user_postUser' (Serviq detecta que no empieza con 'get', por lo que es persistible)
+    const result = await client.send('users', 'user_postUser', { _id: 1234 });
+    
+    console.log('Respuesta del Broker:', result);
     res.send(result);
 });
 
+app.listen(3000, () => console.log('Gateway en puerto 3000'));
 ```
 
-### Microservicios (Servidores de Lógica)
+### 2. El Microservicio (Manejo de Errores y Respuesta)
 
-Los servicios escuchan mensajes mediante `onMessage`. Es vital manejar el **CID** (Correlation ID) para las respuestas.
+Este ejemplo muestra cómo el servicio informa al Broker cuando algo sale mal. Al enviar un mensaje a `BROKER` con el tipo `error`, Serviq activa automáticamente la **lógica de reintento**.
 
-```javascript
-client.onMessage = async (msg) => {
-    const { pattern, data, from, cid } = msg;
+JavaScript
 
-    // Si NO hay CID, es un evento (dispara y olvida)
-    if (!cid) return await productService[pattern](data);
-
-    try {
-        const result = await productService[pattern](data);
-        
-        // REGLA DE ORO: Si falla, devolver status: 'error' para que la cola lo reintente
-        if (!result || result.status === 'error') {
-            return client.send(from, 'res', result || { status: 'error' }, cid);
-        }
-
-        // Respuesta exitosa: siempre incluir el CID recibido
-        client.send(from, 'res', result, cid);
-    } catch (error) {
-        client.send(from, 'res', { status: 'error', message: error.message }, cid);
-    }
-};
-
-```
-
----
-
-## 📦 Sistema de Colas Inteligentes
-
-Las colas en Serviq no son simples buffers en memoria; son **persistentes (SQLite)** y cuentan con **Retry Progresivo**.
-
-```javascript
-// serviq/queue.js
+```js
 import serviq from 'serviq';
 
-const queue_a = serviq.tcpQueue(4000, 'queue_a');
-queue_a.start();
+export const client = serviq.tcpClient('users'); // Se registra como 'users'
+client.connect();
 
-// Se ejecuta cuando el mensaje se procesó con éxito tras reintentos
-queue_a.onSuccess = (res) => {
-    console.log('Procesado con éxito:', res);
+client.onMessage = async (msg) => {
+    try {
+    
+        if (isError) {
+            throw new Error('Error de lógica');
+        }
+
+        // Lógica de negocio exitosa
+        const user = { name: 'Juan', age: 27 };
+
+        // Si es una petición (Request), respondemos al emisor original
+        if (client.isRequest(msg.pattern)) {
+            await client.send(msg.from, 'res', user, msg.cid);
+        }
+
+    } catch (error) {
+        // IMPORTANTE: Informamos al Broker que fallamos.
+        // El Broker recibirá esto y 
+        // encolará el mensaje original para reintentarlo después.
+        await client.send('BROKER', 'error', { 
+            originalMsg: msg, 
+            error: error.message 
+        }, msg.cid);
+    }
 };
-
-// Se ejecuta cuando se superan los 5 reintentos fallidos
-queue_a.onFaild = (err) => {
-    console.log('Límite de reintentos alcanzado:', err);
-};
-
 ```
 
-### ¿Cómo funcionan los reintentos?
+### ¿Qué sucede detrás de escena?
 
-Si un servicio responde con `{ status: 'error' }` o está desconectado, la cola captura el mensaje y aplica un **Exponential Backoff**:
+1. **Petición Inicial:** El Gateway envía el mensaje. Si el servicio `users` está procesando y lanza el error, el Broker recibe el aviso de `error`.
+2. **Cuarentena Temporal:** El Broker guarda el mensaje en una de sus colas (`queue_n.db`) y calcula el próximo intento (10 min, 15 min, etc.).
+3. **Recuperación:** Cuando el `setTimeout` termina y el error desaparece, en el próximo ciclo de reintento del Broker, el mensaje será entregado nuevamente.
+4. **Finalización:** El servicio procesa con éxito y el mensaje se elimina definitivamente de la persistencia de Serviq.
 
-1. Reintenta cada cierto tiempo de forma progresiva.
-2. Si falla 5 veces consecutivas (`MAX_ATTEMPTS`), el mensaje se mueve a la **DLQ (Dead Letter Queue)** y dispara el evento `onFaild`.
+## Eventos del Broker (Hooks de Monitoreo)
 
----
+El Broker emite eventos específicos que permiten al desarrollador reaccionar al ciclo de vida de los mensajes. Esto es útil para logging, auditoría o alertas externas.
 
-## 📑 Reglas de Comunicación (Protocolo Serviq)
+### 1. Evento `taskComplete`
 
-Para que el balanceo y la fiabilidad funcionen, sigue estas convenciones:
+Este evento se dispara cuando un mensaje ha sido entregado y procesado exitosamente por el servicio de destino.
 
-### 1. Palabras Clave en Patterns
+JavaScript
 
-El Broker detecta ciertos prefijos para decidir si el mensaje va a una **Cola** o es **Directo** (Carril Rápido):
+```js
+broker.on('taskComplete', (msg) => {
+    // Aquí recibes el objeto del mensaje que fue finalizado
+    console.log(`[Éxito] Tarea ${msg.cid} completada por ${msg.to}`);
+    
+    // Ideal para:
+    // - Métricas de rendimiento.
+    // - Confirmar acciones en una base de datos externa.
+});
+```
 
-* **Carril Rápido (Directo):** Si el patrón empieza por `get`, `on` o `res` (ej: `getUser`, `onAlert`, `res_product`), el mensaje salta la cola y va directo al servicio. Ideal para lecturas rápidas o respuestas.
-* **Carril de Cola (Persistente):** Cualquier otro patrón (ej: `postProduct`, `updateStock`) pasará por el sistema de colas y balanceo.
+### 2. Evento `taskFailed` (La "Cuarentena")
 
-### 2. Parámetros del método `send`
+Este es el evento más crítico. Se dispara cuando un mensaje ha agotado sus **5 intentos de reintento** y el Broker decide dejar de procesarlo automáticamente.
 
-`client.send(to, pattern, data, cid, res)`
+JavaScript
 
-* **`to`**: Nombre del microservicio destino.
-* **`pattern`**: Nombre de la función a ejecutar.
-* **`data`**: **Siempre debe ser un objeto** (puede ser `{}`).
-* **`cid`**: Generado automáticamente por el Broker, pero debes devolverlo en las respuestas.
-* **`res`**: Si no quieres esperar respuesta, ponlo en `false` para liberar recursos.
+```js
+broker.on('taskFailed', (msg) => {
+    console.log(`[ALERTA] El mensaje ${msg.cid} ha fallado definitivamente.`);
+    
+    // ¿Qué obtenemos aquí?
+    // - El payload original completo.
+    // - El historial de intentos (attempts: 5).
+    // - El nombre del servicio que nunca respondió.
 
-### 3. Estados de Respuesta (`status`)
+    // Acciones recomendadas:
+    // 1. Dar aviso: Enviar un mensaje a Slack/Discord o Email al admin.
+    // 2. Auditoría: El mensaje ya está en la tabla 'dead_letter' de SQLite,
+    //    pero aquí puedes registrar el error en un log centralizado.
+});
+```
 
-* **`success`**: La operación se completó correctamente.
-* **`error`**: Algo falló. **Importante:** Devolver este estado es lo que le indica a la cola que debe guardar el mensaje para reintentarlo después.
-* **`pending`**: Si envías algo a una cola y el servicio está ocupado o caído, el emisor recibirá este estado indicando que el mensaje está seguro en persistencia.
+### ¿Qué obtenemos exactamente en estos eventos?
 
----
+Ambos eventos devuelven el objeto `msg`, que contiene:
 
-## 🔍 Métodos de Inspección de Colas
+- **`cid`**: El identificador único para rastrear qué transacción falló.
+    
+- **`to` / `from`**: Los servicios involucrados.
+    
+- **`data`**: La información de negocio original (para que no se pierda nada).
+    
+- **`attempts`**: En el caso de `taskFailed`, verás que el valor es `6` (el intento que falló definitivamente).
+    
 
-Puedes acceder a la información almacenada en las colas mediante estos métodos:
+### Resumen para el desarrollador
 
-* `getMessages(tableName)`: Obtiene todos los mensajes (pendientes o fallidos).
-* `deleteMessage(tableName, cid)`: Elimina un mensaje específico.
-* `clearAll(tableName)`: Limpia una tabla por completo.
+> Estos eventos son tu **ventana de visibilidad**. Mientras que el Broker se encarga del trabajo sucio de mover datos y reintentar, tú usas estos hooks para mantener al equipo informado sobre la salud de los microservicios.

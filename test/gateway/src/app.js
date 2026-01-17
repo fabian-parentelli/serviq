@@ -2,13 +2,12 @@ import faress from "../faress.js";
 import { client } from "./config.js";
 
 const app = faress();
-
-// Cliente para conectarse con los servicios.
 client.connect();
 
 app.get('/', async (req, res) => {
 
-    const result = await client.send('ms_product', 'postProduct', { _id: 1234 });
+    const result = await client.send('users', 'user_postUser', { _id: 1234 });
+    console.log('gateway:', result);
 
     res.send(result);
 });

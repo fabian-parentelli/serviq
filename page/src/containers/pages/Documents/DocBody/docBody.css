@@ -1,0 +1,19 @@
+.docBody {
+    flex: 3;
+    overflow-y: auto;
+    padding: 1rem 2rem;
+}
+
+.docBody::-webkit-scrollbar {
+  width: 6px;
+}
+
+.docBody::-webkit-scrollbar-track {
+  background: var(--colbo);
+  border-radius: 12px;
+}
+
+.docBody::-webkit-scrollbar-thumb {
+  background: rgb(31, 30, 30);
+  border-radius: 6px;
+}

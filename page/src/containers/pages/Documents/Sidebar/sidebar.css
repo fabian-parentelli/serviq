@@ -1,0 +1,30 @@
+.sidebar {
+  flex: 1;
+  overflow-y: auto;
+  background-color: #0f0e0e;
+  box-shadow: 0px 0px 5px black;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: var(--colbo);
+  border-radius: 12px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgb(31, 30, 30);
+  border-radius: 6px;
+}
+
+.sidebar p {
+  padding: 1rem;
+  cursor: pointer;
+  border-bottom: 1px solid rgb(26, 25, 25);
+}
+
+.sidebar p:hover {
+  background-color: #181616;
+}

@@ -1,0 +1,36 @@
+.goDoc {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.goDoc section {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.goDoc section img {
+    width: 50px;
+}
+
+.goDoc section h3 {
+    font-size: 3rem;
+}
+
+.goDoc a {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    color: var(--colc);
+    text-decoration: none;
+    transition: .3s ease-in-out;
+}
+
+.goDoc a svg {
+    transition: .3s ease-in-out;
+}
+
+.goDoc a:hover {
+    color: var(--cola);
+}

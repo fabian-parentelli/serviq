@@ -1,27 +1,23 @@
-import serviq from 'serviq';
-import * as productService from './service.js';
+import serviq from '../../../serviqNpm/src/index.js';
 
-export const client = serviq.tcpClient(4000, 'ms_product');
+export const client = serviq.tcpClient('products');
 client.connect();
 
 client.onMessage = async (msg) => {
-    
-    const { pattern, data, from, cid } = msg;
-
-    if (!cid) return await productService[pattern](data);
 
     try {
-        const result = await productService[pattern](data);
-        
-        if (!result || result.status === 'error') {
-            return client.send(from, 'res', result || { status: 'error' }, cid);
-            // Para que vuelva a la cola es importante que su status sea error.
+        // Lógica de negocio
+        const product = { name: 'pc-gamer', price: 1200 };
+
+        // throw new Error('saltamos al error');
+
+        if (client.isRequest(msg.pattern)) {
+            await client.send(msg.from, 'res', product, msg.cid);
         };
 
-        client.send(from, 'res', result, cid);
     } catch (error) {
-        console.log(error);
-        client.send(from, 'res', { status: 'error', message: error.message }, cid);
+        // Informamos al broker.
+        await client.send('BROKER', 'error', { originalMsg: msg, error: error.message }, msg.cid);
     };
 
 };

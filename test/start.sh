@@ -4,7 +4,7 @@ node serviq/broker.js &
 
 sleep 1
 node --watch gateway/src/app.js &
-node --watch serviq/queue.js &
+# node --watch serviq/queue.js &
 node --watch ms_user/src/app.js &
 node --watch ms_product/src/app.js &
 

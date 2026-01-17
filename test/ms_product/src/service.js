@@ -3,7 +3,7 @@ const postProduct = async (data) => {
 
     // Supongamos que buscamos en db el producto.
 
-    console.log('product');
+    // console.log('product');
 
     const product = {
         name: 'termo',
