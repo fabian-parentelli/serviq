@@ -1,0 +1,42 @@
+.nextPage {
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem 0;
+    gap: 1rem;
+}
+
+.nextPage section {
+    display: flex;
+    flex-direction: column;
+    max-width: 280px;
+    width: 100%;
+    border: solid 1px var(--colbo);
+    border-radius: 8px;
+    padding: 1rem;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.nextPage section:hover {
+    border: solid 1px var(--colb);
+}
+
+.nextPage section:nth-of-type(2) {
+    align-items: flex-end;
+}
+
+.nextPage section p {
+    color: rgb(63, 60, 60);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.nextPage section h5 {
+    color: var(--colb);
+}
+
+@media (max-width: 600px) {
+    .nextPage {
+        flex-direction: column;
+    }
+}

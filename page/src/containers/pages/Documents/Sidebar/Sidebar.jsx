@@ -19,5 +19,7 @@ export default Sidebar;
 
 const sidebarData = [
     { title: 'Introducción', link: 'intro' },
+    { title: 'Filosofía Serviq', link: 'philosophy' },
     { title: 'Instalación', link: 'import' },
+    { title: 'Inicio rápido', link: 'quikstart' },
 ];

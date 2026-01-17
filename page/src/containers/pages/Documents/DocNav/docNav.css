@@ -1,3 +1,25 @@
 .docNav {
     flex: 1;
 }
+
+.docNav div {
+    padding: 1rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.docNav div h4 {
+    color: var(--colb);
+}
+
+.docNav div p {
+    cursor: pointer;
+}
+
+@media (max-width: 769px) {
+    
+    .docNav {
+        display: none;
+    }
+}

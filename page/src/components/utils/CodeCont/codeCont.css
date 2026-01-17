@@ -48,3 +48,15 @@
 .codeCont .codeContBottom pre code .cod-red {
     color: #ea9247;
 }
+
+.codeCont .codeContBottom pre code .cod-yellow {
+    color: yellow;
+}
+
+.codeCont .codeContBottom pre code .cod-midblue {
+    color: #30A1C0;
+}
+
+.codeCont .codeContBottom pre code .cod-skygreen {
+    color: #01e98c;
+}

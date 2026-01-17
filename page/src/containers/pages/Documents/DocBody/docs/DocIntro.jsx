@@ -1,12 +1,9 @@
-import CodeCont from '../../../../../components/utils/CodeCont/CodeCont';
-import './docIntro.css';
+import CodeCont from '@/components/utils/CodeCont/CodeCont.jsx';
 
 const DocIntro = () => {
 
-    // if (data.message.includes('SQLite is an experimental feature')) return false;
-
     return (
-        <div className="docIntro">
+        <div className='docBodyDiv'>
             <h2>Introducción</h2>
 
             <section className='flex-col'>
@@ -31,9 +28,9 @@ const DocIntro = () => {
                 <h4>Notas de estabilidad</h4>
                 <p>Aunque <span>node:sqlite</span> se considera una característica experimental en las versiones iniciales de la rama 22, Serviq incluye un supresor de advertencias nativo para mantener una consola limpia:</p>
 
-                <CodeCont>
+                <CodeCont paste={"if (data.message.includes('SQLite is an experimental feature')) return false;"}>
                     <p className='cod-green'>// Serviq maneja esto internamente por ti:</p>
-                    <p><span className='cod-pink'>if (</span><span className='cod-skyblue'>data.message</span><span className='cod-skyyellow'>.includes</span><span className='cod-blue'>{'('}</span><span className='cod-red'>'SQLite is an experimental feature'</span><span className='cod-blue'>{')'}</span><span className='cod-pink'>{')'}</span> <span className='cod-pink'>return</span> <span className='cod-blue'>false</span>;</p>
+                    <p><span className='cod-pink'>{'if ('}</span><span className='cod-skyblue'>data.message</span><span className='cod-skyyellow'>.includes</span><span className='cod-blue'>{'('}</span><span className='cod-red'>'SQLite is an experimental feature'</span><span className='cod-blue'>{')'}</span><span className='cod-pink'>{')'}</span> <span className='cod-pink'>return</span> <span className='cod-blue'>false</span>;</p>
                 </CodeCont>
             </section>
 
@@ -42,9 +39,3 @@ const DocIntro = () => {
 };
 
 export default DocIntro;
-
-// Tengo que trabajar en pasar lo que queiro que copie
-// Tengo que trabajar en pasar lo que queiro que copie
-// Tengo que trabajar en pasar lo que queiro que copie
-// Tengo que trabajar en pasar lo que queiro que copie
-// Tengo que trabajar en pasar lo que queiro que copie
