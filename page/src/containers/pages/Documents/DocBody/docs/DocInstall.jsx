@@ -18,7 +18,7 @@ const DocInstall = () => {
                 <p>Instala el paquete mediante tu gestor de dependencias preferido:</p>
 
                 <CodeCont lenguage='Bash' paste="pnpm add fara-serviq">
-                    <p className='cod-green'># Usanod npm</p>
+                    <p className='cod-green'># Usando npm</p>
                     <p>npm install fara-serviq</p>
                     <br />
                     <p className='cod-green'># Usando pnpm (Recomendado por velocidad)</p>

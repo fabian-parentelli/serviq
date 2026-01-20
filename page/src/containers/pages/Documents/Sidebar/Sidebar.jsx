@@ -22,4 +22,7 @@ const sidebarData = [
     { title: 'Filosofía Serviq', link: 'philosophy' },
     { title: 'Instalación', link: 'import' },
     { title: 'Inicio rápido', link: 'quikstart' },
+    { title: 'Anatomia de un envío', link: 'send' },
+    { title: 'Patterns', link: 'patterns' },
+    { title: 'Persistencia progresiva', link: 'backoff' },
 ];

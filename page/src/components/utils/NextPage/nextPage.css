@@ -29,10 +29,12 @@
     color: rgb(63, 60, 60);
     font-size: 12px;
     font-weight: 600;
+    user-select: none;
 }
 
 .nextPage section h5 {
     color: var(--colb);
+    user-select: none;
 }
 
 @media (max-width: 600px) {

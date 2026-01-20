@@ -34,6 +34,30 @@ const data = {
             { text: 'El Ciclo de Vida del Mensaje en el Cliente', position: 83 },
         ]
     },
-}
+    send: {
+        name: 'Anatomía de un envío',
+        positons: [
+            { text: 'Estructura de la función', position: 5 },
+            { text: 'Ejemplo de implementación', position: 50 },
+            { text: 'Payload', position: 90 },
+        ]
+    },
+    patterns: {
+        name: 'Patterns',
+        positons: [
+            { text: 'Lógica de Patterns', position: 5 },
+            { text: 'Comportamiento según el prefijo', position: 25 },
+            { text: 'El manejo de error', position: 95 },
+        ]
+    },
+    backoff: {
+        name: 'Patterns',
+        positons: [
+            { text: 'Reintentos', position: 5 },
+            { text: 'Gestión de Errores', position: 35 },
+            { text: 'Eventos de notificación', position: 95 },
+        ]
+    },
+};
 
 export { data };

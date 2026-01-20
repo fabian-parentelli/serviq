@@ -60,3 +60,7 @@
 .codeCont .codeContBottom pre code .cod-skygreen {
     color: #01e98c;
 }
+
+.codeCont .codeContBottom pre code .cod-gray {
+    color: gray;
+}

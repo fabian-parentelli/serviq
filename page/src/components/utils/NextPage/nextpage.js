@@ -20,9 +20,28 @@ const nextpage = {
     quikstart: {
         before: 'import',
         nameBefore: 'Instalación',
+        after: 'send',
+        nameAfter: 'Anatomía de un envío'
+    },
+    send: {
+        before: 'quikstart',
+        nameBefore: 'Inicio rapido',
+        after: 'patterns',
+        nameAfter: 'Patterns'
+    },
+    patterns: {
+        before: 'send',
+        nameBefore: 'Anatomía de un envío',
+        after: 'backoff',
+        nameAfter: 'Persistencia progresiva'
+    },
+    backoff: {
+        before: 'patterns',
+        nameBefore: 'Patters',
         after: null,
         nameAfter: null
     },
+    
 };
 
 export { nextpage };
