@@ -45,7 +45,7 @@ const NavBar = () => {
                 <div className='flex-center navBarDiv'>
                     <Link to={'/#whatIs'} >Que es</Link>
                     <Link to={'/doc?sect=intro'} >Documentación</Link>
-                    <Link to={'/blog'} >Blog</Link>
+                    <Link to={'/blogs'} >Blog</Link>
                     <Link to={'/com'} >Comunidad</Link>
                     <Link to={'/help'} >Ayuda</Link>
                 </div>
@@ -57,7 +57,7 @@ const NavBar = () => {
                 <ul className={`navBarHambCont ${menu ? 'nvhcOpen' : 'nvhcClosed'}`}>
                     <li onClick={() => handleGo('#whatIs')} >Que es</li>
                     <li onClick={() => handleGo('doc?sect=intro')} >Documentación</li>
-                    <li onClick={() => handleGo('blog')} >Blog</li>
+                    <li onClick={() => handleGo('blogs')} >Blog</li>
                     <li onClick={() => handleGo('com')} >Comunidad</li>
                     <li onClick={() => handleGo('help')} >Ayuda</li>
                 </ul>

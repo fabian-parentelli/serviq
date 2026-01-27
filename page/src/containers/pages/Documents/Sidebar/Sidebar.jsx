@@ -25,4 +25,8 @@ const sidebarData = [
     { title: 'Anatomia de un envío', link: 'send' },
     { title: 'Patterns', link: 'patterns' },
     { title: 'Persistencia progresiva', link: 'backoff' },
+    { title: 'Resilencia de sesión', link: 'hotswap' },
+    { title: 'Anatomía del Payload', link: 'identifier' },
+    { title: 'Persistencia Híbrida', link: 'hibrid' },
+    { title: 'Solución de problemas', link: 'problem' },
 ];

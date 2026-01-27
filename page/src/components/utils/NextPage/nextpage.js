@@ -38,6 +38,30 @@ const nextpage = {
     backoff: {
         before: 'patterns',
         nameBefore: 'Patters',
+        after: 'hotswap',
+        nameAfter: 'Resilencia de sesión'
+    },
+    hotswap: {
+        before: 'backoff',
+        nameBefore: 'Persistencia progresiva',
+        after: 'identifier',
+        nameAfter: 'Anatomía del Payload'
+    },
+    identifier: {
+        before: 'hotswap',
+        nameBefore: 'Resilencia de sesión',
+        after: 'hibrid',
+        nameAfter: 'Persistencia híbrida'
+    },
+    hibrid: {
+        before: 'identifier',
+        nameBefore: 'Anatomía del Payload',
+        after: 'problem',
+        nameAfter: 'Solución de problemas'
+    },
+    problem: {
+        before: 'hibrid',
+        nameBefore: 'Persistencia híbrida',
         after: null,
         nameAfter: null
     },

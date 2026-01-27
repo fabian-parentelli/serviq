@@ -58,6 +58,41 @@ const data = {
             { text: 'Eventos de notificación', position: 95 },
         ]
     },
+    hotswap: {
+        name: 'Resiliencia de Sesión',
+        positons: [
+            { text: 'Hot-Swap', position: 5 },
+            { text: 'Recuperación Automática', position: 85 },
+        ]
+    },
+    identifier: {
+        name: 'Anatomía del Payload',
+        positons: [
+            { text: 'El Identificador de Correlación (cid)', position: 5 },
+            { text: 'Estructura de un Mensaje Estándar', position: 35 },
+            { text: '¿Para que sirve el cid?', position: 85 },
+            { text: 'Propagación de CID', position: 95 },
+        ]
+    },
+    hibrid: {
+        name: 'Persistencia Híbrida',
+        positons: [
+            { text: 'La carpeta /queues', position: 5 },
+            { text: 'Estructura de archivos', position: 25 },
+            { text: '¿Por qué múltiples archivos .db?', position: 70 },
+            { text: 'Anatomía interna de una Queue', position: 80 },
+            { text: 'Estabilidad', position: 95 },
+        ]
+    },
+    problem: {
+        name: 'Solución de problemas',
+        positons: [
+            { text: 'El emisor recibe un Timeout Error', position: 5 },
+            { text: 'El mensaje queda en status: pending pero no se entrega', position: 55 },
+            { text: 'Error ECONNREFUSED al conectar', position: 80 },
+            { text: 'Los archivos .db no se crean', position: 95 }
+        ]
+    },
 };
 
 export { data };

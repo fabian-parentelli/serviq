@@ -2,8 +2,6 @@ import CodeCont from '@/components/utils/CodeCont/CodeCont.jsx';
 
 const DocBackoff = () => {
 
-    // broker.on('taskComplete', (msg) => {})
-
     return (
         <div className="docBodyDiv">
             <h2>Backoff Progresivo: El Motor de Reintentos</h2>

@@ -1,0 +1,76 @@
+.blogs {
+    margin-top: 70px;
+    min-height: 89vh;
+}
+
+.blogs .blogsSect {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 800px;
+    width: 90%;
+    margin: 2rem auto;
+    text-align: center;
+    gap: 1rem;
+}
+
+.blogs .blogsSect h2 {
+    font-size: 3rem;
+    margin-top: 1rem;
+}
+
+.blogs .blogsSect h3 {
+    color: var(--cola);
+}
+
+.blogs .blogsSect p {
+    line-height: 1.6;
+    color: var(--cold);
+}
+
+.blogs .blogsSectCards {
+    display: flex;
+    max-width: 800px;
+    width: 90%;
+    margin: 2rem auto;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.blogs .blogsSectCards .blogsCard {
+    width: 200px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0px 0px 5px black;
+    justify-content: space-between;
+    padding: 0 0 12px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    text-align: center;
+    color: var(--cold);
+    text-decoration: none;
+    transition: .3s ease-in-out;
+}
+
+.blogs .blogsSectCards .blogsCard:hover {
+    transform: translateY(-5px);
+}
+
+.blogs .blogsSectCards .blogsCard img {
+    width: 200px;
+}
+
+.blogs .blogsSectCards .blogsCard p {
+    max-width: 80%;
+    line-height: 1.4;
+}
+
+@media (max-width: 767px) {
+    
+    .blogs .blogsSectCards {
+        justify-content: center;
+        gap: 2rem;
+    }
+}

@@ -1,0 +1,22 @@
+.blog {
+    margin-top: 70px;
+    min-height: 88px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+}
+
+.blog h2 {
+    font-size: 3rem;
+    margin-top: 2rem;
+}
+
+.blog img {
+    margin-top: 1rem;
+    max-width: 400px;
+    width: 90%;
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px black;
+}

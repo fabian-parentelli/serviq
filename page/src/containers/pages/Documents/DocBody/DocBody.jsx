@@ -8,6 +8,10 @@ import NextPage from '@/components/utils/NextPage/NextPage.jsx';
 import DocPatterns from './docs/DocPatterns.jsx';
 import DocSend from './docs/DocSend.jsx';
 import DocBackoff from './docs/DocBackoff.jsx';
+import DocHotSwap from './docs/DocHotSwap.jsx';
+import DocIdentifier from './docs/DocIdentifier.jsx';
+import DocHybrid from './docs/DocHybrid.jsx';
+import DocProblem from './docs/DocProblem.jsx';
 
 const DocBody = ({ params, setParams, docBodyRef }) => {
 
@@ -26,6 +30,10 @@ const DocBody = ({ params, setParams, docBodyRef }) => {
             {params.sect === 'send' && <DocSend />}
             {params.sect === 'patterns' && <DocPatterns />}
             {params.sect === 'backoff' && <DocBackoff />}
+            {params.sect === 'hotswap' && <DocHotSwap />}
+            {params.sect === 'identifier' && <DocIdentifier />}
+            {params.sect === 'hibrid' && <DocHybrid />}
+            {params.sect === 'problem' && <DocProblem />}
 
             <NextPage params={params} setParams={setParams} />
         </div>
