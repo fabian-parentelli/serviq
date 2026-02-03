@@ -2,6 +2,7 @@ import './blog.css';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { blogs } from '@/Utils/blogs.utils.js';
+import BlogArq from './sections/BlogArq/BlogArq';
 
 const Blog = () => {
 
@@ -14,6 +15,7 @@ const Blog = () => {
             <h2>{doc?.title}</h2>
             <p>{doc?.subTitle}</p>
             <img src={doc?.img} alt="img" />
+            {type === 'architecture' && <BlogArq />}
         </div>
     );
 };

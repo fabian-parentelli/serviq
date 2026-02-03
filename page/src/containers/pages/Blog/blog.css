@@ -5,7 +5,8 @@
     align-items: center;
     flex-direction: column;
     gap: 1rem;
-    text-align: center;
+    /* text-align: center; */
+    padding-bottom: 4rem;
 }
 
 .blog h2 {

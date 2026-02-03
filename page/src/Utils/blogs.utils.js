@@ -1,7 +1,7 @@
 const blogs = [
     {
         title: 'Arquitectura',
-        subTitle: 'Sugerencia de la arquitectura de tus microservicios con serviq',
+        subTitle: 'Arquitectura de Referencia con Serviq',
         img: '/architecture.png',
         link: 'architecture'
     },
