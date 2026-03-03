@@ -6,6 +6,7 @@ import Documents from '../containers/pages/Documents/Documents';
 import Blogs from '../containers/pages/Blogs/Blogs';
 import Blog from '../containers/pages/Blog/Blog';
 import Footer from '../containers/layouts/Footer/Footer';
+import BuildPage from '../containers/layouts/BuildPage/BuildPage';
 
 const RouteWrap = () => {
 
@@ -20,6 +21,8 @@ const RouteWrap = () => {
                     <Route path='/doc' element={<Documents />} />
                     <Route path='/blogs' element={<Blogs />} />
                     <Route path='/blog/:type' element={<Blog />} />
+                    
+                    <Route path='/*' element={<BuildPage />} />
                 </Routes>
 
                 <Footer />

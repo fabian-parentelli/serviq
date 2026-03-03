@@ -239,7 +239,6 @@ class Broker extends EventEmitter {
         return stats;
     };
 
-
     getFailedMessages() {
         const allFailed = [];
         for (const queue of this.queuePool) {
