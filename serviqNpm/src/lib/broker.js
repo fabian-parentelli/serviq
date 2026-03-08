@@ -169,7 +169,8 @@ class Broker extends EventEmitter {
     _isPersistable(pattern) {
         if (!pattern) return false;
         const action = pattern.includes('_') ? pattern.split('_')[1] : pattern;
-        if (action.toLowerCase().startsWith('get')) return false;
+        const lowerAction = action.toLowerCase();
+        if (lowerAction.startsWith('get') || lowerAction.startsWith('pot')) return false;
         return true;
     };
 
